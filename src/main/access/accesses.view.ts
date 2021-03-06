@@ -1,8 +1,9 @@
-import { GET, PathQuery, View } from '@rester/core';
-import { getRepository } from '@rester/core/dist/declares/typeorm';
+import { GET, Handler, PathQuery, View } from '@rester/core';
+import { AuthHandler } from '../common/handlers';
 import { AccessEntity } from './access.entity';
 
 @View('accesses')
+@Handler(AuthHandler)
 export class AccessView {
 
   @GET()
@@ -10,12 +11,11 @@ export class AccessView {
     @PathQuery('take') take: number = 10,
     @PathQuery('skip') skip: number = 0,
   ) {
-    return getRepository(AccessEntity, 'local')
-      .find({
-        order: { id: 'DESC' },
-        take: +take,
-        skip: +skip,
-      });
+    return AccessEntity.find({
+      order: { timestamp: 'DESC' },
+      take: +take,
+      skip: +skip,
+    });
   }
 
 }

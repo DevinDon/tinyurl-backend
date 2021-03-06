@@ -1,11 +1,11 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from '@rester/core/dist/declares/typeorm';
+import { BaseEntity, Column, Entity, ObjectID, ObjectIdColumn, PrimaryGeneratedColumn } from '@rester/core/dist/declares/typeorm';
 import { IsDate, IsIP, Length } from '@rester/core/dist/declares/validator';
 
 @Entity('access')
 export class AccessEntity extends BaseEntity {
 
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @ObjectIdColumn()
+  _id!: ObjectID;
 
   @Length(3, 10)
   @Column()
@@ -19,7 +19,7 @@ export class AccessEntity extends BaseEntity {
 
   @IsDate()
   @Column()
-  datetime!: Date;
+  timestamp!: Date;
 
   @IsIP()
   @Column()

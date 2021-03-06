@@ -1,7 +1,7 @@
 {
-  "name": "template.rester",
-  "version": "0.13.1",
-  "description": "Rester Template.",
+  "name": "tinyurl-rester",
+  "version": "0.1.0",
+  "description": "Tinyurl rester.",
   "main": "dist/index.js",
   "directories": {
     "doc": "docs",
@@ -35,7 +35,7 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "@rester/core": "^0.13.1"
+    "@rester/core": "^0.13.3"
   },
   "devDependencies": {
     "@types/jasmine": "3.6.4",
@@ -56,12 +56,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DevinDon/template.git"
+    "url": "git+https://github.com/DevinDon/tinyurl-rester.git"
   },
   "bugs": {
-    "url": "https://github.com/DevinDon/template/issues"
+    "url": "https://github.com/DevinDon/tinyurl-rester/issues"
   },
-  "homepage": "https://github.com/DevinDon/template/tree/typescript",
+  "homepage": "https://github.com/DevinDon/tinyurl-rester",
   "optionalDependencies": {
     "mongodb": "^3.6.4",
     "sqlite3": "^5.0.2"

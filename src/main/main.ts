@@ -1,11 +1,11 @@
 import { CORSHandler, Rester } from '@rester/core';
 import { AccessEntity } from './access';
-import { AphorismEntity } from './aphorism';
+import { AccessHandler } from './common/handlers';
+import { LinkEntity } from './link';
 
 const rester = new Rester();
 
-rester.addEntities('local', AccessEntity);
-rester.addEntities(AphorismEntity);
-rester.addHandlers(CORSHandler);
+rester.addEntities(AccessEntity, LinkEntity);
+rester.addHandlers(CORSHandler, AccessHandler);
 
 rester.bootstrap();
