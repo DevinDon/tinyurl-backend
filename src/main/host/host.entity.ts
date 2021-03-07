@@ -8,7 +8,7 @@ export class HostEntity extends BaseEntity implements Host {
   @ObjectIdColumn()
   _id!: ObjectID;
 
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: false })
   domain!: string;
 
   @IsDate()

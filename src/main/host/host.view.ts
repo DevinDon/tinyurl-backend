@@ -1,4 +1,4 @@
-import { Handler, HTTP400Exception, HTTPException, POST, PUT, RequestBody, View } from '@rester/core';
+import { DELETE, Handler, HTTP400Exception, HTTPException, PathVariable, POST, PUT, RequestBody, View } from '@rester/core';
 import { AuthHandler } from '../common/handlers';
 import { HostEntity } from './host.entity';
 import { Host } from './host.model';
@@ -13,7 +13,7 @@ export class HostView {
       .insert({
         domain,
         created: new Date(),
-        expired,
+        expired: expired ? new Date(expired) : new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
       })
       .catch(error => { throw new HTTP400Exception('Domain has already inserted.'); });
     return HostEntity.find(result.identifiers[0]._id);
@@ -28,6 +28,11 @@ export class HostView {
     host.domain = domain;
     host.expired = expired;
     return await host.save();
+  }
+
+  @DELETE(':domain')
+  async delete(@PathVariable('domain') domain: Host['domain']) {
+    return HostEntity.delete({ domain });
   }
 
 }
