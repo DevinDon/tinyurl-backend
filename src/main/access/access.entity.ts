@@ -1,5 +1,6 @@
-import { BaseEntity, Column, Entity, ObjectID, ObjectIdColumn, PrimaryGeneratedColumn } from '@rester/core/dist/declares/typeorm';
+import { BaseEntity, Column, Entity, ObjectID, ObjectIdColumn } from '@rester/core/dist/declares/typeorm';
 import { IsDate, IsIP, Length } from '@rester/core/dist/declares/validator';
+import { IncomingHttpHeaders } from 'http';
 
 @Entity('access')
 export class AccessEntity extends BaseEntity {
@@ -24,5 +25,11 @@ export class AccessEntity extends BaseEntity {
   @IsIP()
   @Column()
   ip!: string;
+
+  @Column()
+  headers!: IncomingHttpHeaders;
+
+  @Column()
+  request!: string;
 
 }

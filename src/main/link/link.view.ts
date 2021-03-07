@@ -7,11 +7,25 @@ export class LinkView {
   @Inject()
   private controller!: LinkController;
 
+  @GET()
+  async index() {
+    return new RedirectResponse({ url: 'https://demo.don.red/tinyurl' });
+  }
+
   @POST()
   async transform(
-    @RequestBody() { origin }: { origin: string },
+    @RequestBody() { url }: { url: string },
   ) {
-    return this.controller.transform(origin);
+    const isTinyurl = await this.controller.isTinyurl(url);
+    const result = await (
+      isTinyurl
+        ? this.controller.access(isTinyurl)
+        : this.controller.transform(url)
+    );
+    if (!result) {
+      throw new HTTP404Exception(`TinyURL ${url} cannot be restore.`);
+    }
+    return result;
   }
 
   @GET(':id')
