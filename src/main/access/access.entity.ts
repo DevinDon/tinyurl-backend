@@ -1,6 +1,6 @@
-import { BaseEntity, Column, Entity, ObjectID, ObjectIdColumn } from '@rester/core/dist/declares/typeorm';
-import { IsDate, IsIP, Length } from '@rester/core/dist/declares/validator';
+import { IsDate, IsIP, Length } from 'class-validator';
 import { IncomingHttpHeaders } from 'http';
+import { BaseEntity, Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 
 @Entity('access')
 export class AccessEntity extends BaseEntity {

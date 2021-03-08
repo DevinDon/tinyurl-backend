@@ -1,5 +1,5 @@
-import { BaseEntity, Column, Entity, ObjectID, ObjectIdColumn } from '@rester/core/dist/declares/typeorm';
 import { IsDate } from 'class-validator';
+import { BaseEntity, Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 import { Host } from './host.model';
 
 @Entity('host')
