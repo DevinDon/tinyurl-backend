@@ -35,7 +35,7 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "@rester/core": "^0.13.5"
+    "@rester/core": "^0.13.6"
   },
   "devDependencies": {
     "@types/jasmine": "3.6.6",

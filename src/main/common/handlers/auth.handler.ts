@@ -16,7 +16,7 @@ export class AuthHandler extends BaseHandler {
   async handle(next: () => Promise<any>): Promise<any> {
     const token = parseToken(this.request.headers['authorization']);
     if (token !== 'admin') {
-      throw new HTTP403Exception('No permission.');
+      throw new HTTP403Exception('No Permission.');
     }
     return next();
   }

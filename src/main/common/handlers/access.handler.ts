@@ -4,11 +4,13 @@ import { AccessEntity } from '../../access';
 export class AccessHandler extends BaseHandler {
 
   async handle(next: () => Promise<any>): Promise<any> {
+    const result = await next();
+
     AccessEntity
       .insert({
         method: this.request.method?.toUpperCase(),
         url: this.request.url,
-        params: JSON.stringify(this.mapping.queryObject),
+        params: JSON.stringify(this.mapping?.queryObject),
         timestamp: new Date(),
         ip: this.request.headers['x-forwarded-for'] as string || this.request.socket.remoteAddress,
         headers: this.request.headers,
@@ -16,11 +18,12 @@ export class AccessHandler extends BaseHandler {
         response: {
           statusCode: this.response.statusCode,
           statusMessage: this.response.statusMessage,
-          length: +(this.response.getHeader('content-length') || 0),
+          length: result ? result.length : 0,
         },
       })
       .catch(error => this.rester.logger.warn(`Record log failed: ${error}`));
-    return next();
+
+    return result;
   }
 
 }
