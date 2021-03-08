@@ -7,11 +7,6 @@ export class LinkView {
   @Inject()
   private controller!: LinkController;
 
-  @GET()
-  async index() {
-    return new RedirectResponse({ url: 'https://demo.don.red/tinyurl' });
-  }
-
   @POST()
   async transform(
     @RequestBody() { url }: { url: string },
