@@ -12,6 +12,12 @@ export class AccessHandler extends BaseHandler {
         timestamp: new Date(),
         ip: this.request.headers['x-forwarded-for'] as string || this.request.socket.remoteAddress,
         headers: this.request.headers,
+        version: this.request.httpVersion,
+        response: {
+          statusCode: this.response.statusCode,
+          statusMessage: this.response.statusMessage,
+          length: +(this.response.getHeader('content-length') || 0),
+        },
       })
       .catch(error => this.rester.logger.warn(`Record log failed: ${error}`));
     return next();

@@ -30,6 +30,16 @@ export class AccessEntity extends BaseEntity {
   headers!: IncomingHttpHeaders;
 
   @Column()
-  request!: string;
+  version!: string;
+
+  @Column()
+  request!: any;
+
+  @Column()
+  response!: {
+    statusCode: number;
+    statusMessage: string;
+    length: number;
+  };
 
 }
