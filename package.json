@@ -2,7 +2,7 @@
   "name": "tinyurl-rester",
   "version": "0.1.0",
   "description": "Tinyurl rester.",
-  "main": "dist/index.js",
+  "main": "dist/main.js",
   "directories": {
     "doc": "docs",
     "example": "src/demo",
