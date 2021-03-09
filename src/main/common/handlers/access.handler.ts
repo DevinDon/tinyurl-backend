@@ -12,7 +12,7 @@ export class AccessHandler extends BaseHandler {
         url: this.request.url,
         params: JSON.stringify(this.mapping?.queryObject),
         timestamp: new Date(),
-        ip: this.request.headers['x-forwarded-for'] as string || this.request.socket.remoteAddress,
+        ip: this.request.headers['x-real-ip'] as string || this.request.headers['x-forwarded-for'] as string || this.request.socket.remoteAddress,
         headers: this.request.headers,
         version: this.request.httpVersion,
         response: {
