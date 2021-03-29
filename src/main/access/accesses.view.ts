@@ -1,21 +1,26 @@
-import { GET, Handler, PathQuery, View } from '@rester/core';
-import { AuthHandler } from '../common/handlers';
+import { BaseView, GET, Handler, PathQuery, View } from '@rester/core';
+import { getEntity } from '@rester/orm';
+import { UserAuthHandler } from '../common/handlers';
 import { AccessEntity } from './access.entity';
 
 @View('accesses')
-@Handler(AuthHandler)
-export class AccessView {
+@Handler(UserAuthHandler)
+export class AccessView extends BaseView {
+
+  private entity: AccessEntity;
+  private collection: AccessEntity['collection'];
+
+  async init() {
+    this.entity = getEntity(AccessEntity);
+    this.collection = this.entity.collection;
+  }
 
   @GET()
   async all(
+    @PathQuery('from') from: string = '000000000000000000000000',
     @PathQuery('take') take: number = 10,
-    @PathQuery('skip') skip: number = 0,
   ) {
-    return AccessEntity.find({
-      order: { timestamp: 'DESC' },
-      take: +take,
-      skip: +skip,
-    });
+    return this.entity.getPagination({ from, take });
   }
 
 }
