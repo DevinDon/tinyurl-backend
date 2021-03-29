@@ -1,3 +1,5 @@
+const randomID = () => BigInt(Math.round(Math.random() * 31));
+
 export class SnowFlake {
 
   private readonly twepoch = 1548988646430n;
@@ -23,7 +25,7 @@ export class SnowFlake {
   private readonly workerID: bigint;
   private readonly dataCenterID: bigint;
 
-  constructor(workerID: bigint, dataCenterID: bigint) {
+  constructor(workerID: bigint = randomID(), dataCenterID: bigint = randomID()) {
     if (workerID > this.maxWorkerID || workerID < 0n) {
       throw new Error(
         `workerID can't be greater than ${this.maxWorkerID} or less than 0`,
@@ -67,7 +69,7 @@ export class SnowFlake {
     );
   }
 
-  private nextMillis(lastTimeStamp: bigint) {
+  private nextMillis(lastTimeStamp: bigint): bigint {
     let timestamp: bigint = this.currentTime();
     while (timestamp <= lastTimeStamp) {
       timestamp = this.currentTime();
