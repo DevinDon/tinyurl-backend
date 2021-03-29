@@ -1,26 +1,27 @@
-import { BaseHandler } from '@rester/core';
-import { AccessEntity } from '../../access';
+import { BaseHandler, parseIPsFromRequest } from '@rester/core';
+import { getEntity } from '@rester/orm';
+import { AccessEntity } from '../../access/access.entity';
 
 export class AccessHandler extends BaseHandler {
 
   async handle(next: () => Promise<any>): Promise<any> {
     const result = await next();
 
-    AccessEntity
-      .insert({
-        method: this.request.method?.toUpperCase(),
-        url: this.request.url,
-        params: JSON.stringify(this.mapping?.queryObject),
-        timestamp: new Date(),
-        ip: this.request.headers['x-real-ip'] as string || this.request.headers['x-forwarded-for'] as string || this.request.socket.remoteAddress,
-        headers: this.request.headers,
-        version: this.request.httpVersion,
-        response: {
-          statusCode: this.response.statusCode,
-          statusMessage: this.response.statusMessage,
-          length: result ? result.length : 0,
-        },
-      })
+    const access = {
+      method: this.request.method?.toUpperCase() || 'UNKNOWN',
+      path: this.mapping?.path ?? this.request.url,
+      query: JSON.stringify(this.mapping?.queryObject),
+      headers: this.request.headers,
+      timestamp: new Date(),
+      ips: parseIPsFromRequest(this.request),
+      version: this.request.httpVersion,
+      statusCode: this.response.statusCode,
+      statusMessage: this.response.statusMessage,
+      length: result ? result.length : 0,
+    };
+
+    (getEntity(AccessEntity) as AccessEntity).collection
+      .insertOne(access)
       .catch(error => this.rester.logger.warn(`Record log failed: ${error}`));
 
     return result;
