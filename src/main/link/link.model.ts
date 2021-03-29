@@ -6,7 +6,14 @@ export interface Link {
   /** 原网址 */
   origin: string;
 
-  /** 创建时间 */
-  timestamp: Date;
+  createdAt: Date;
+
+  updatedAt: Date;
 
 }
+
+export type LinkID = string;
+
+export type LinkInsertParams = { url: string };
+
+export type LinkUpdateParams = Partial<Pick<Link, 'origin'>>;

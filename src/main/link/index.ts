@@ -1,4 +1,9 @@
-export * from './link.controller';
-export * from './link.entity';
-export * from './link.model';
-export * from './link.view';
+import { ResterModule } from '@rester/core';
+import { LinkEntity } from './link.entity';
+import { LinkView } from './link.view';
+import { LinksView } from './links.view';
+
+export const LinkModule: ResterModule = {
+  entities: [LinkEntity],
+  views: [LinkView, LinksView],
+};

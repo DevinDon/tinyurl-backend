@@ -19,6 +19,18 @@ export class HostEntity extends MongoEntity<Host> implements Host {
   @Column()
   expiredAt?: Date;
 
+  async getAllHosts() {
+    return this.collection
+      .find()
+      .toArray()
+      .then(
+        hosts => hosts
+          .filter(host => (!host.expiredAt) || (host.expiredAt && host.expiredAt > new Date()))
+          .map(host => host.domain)
+          .flat(),
+      );
+  }
+
   async getRandomList({ take }: Pick<PaginationParam, 'take'>) {
     return { list: await this.collection.aggregate([{ $sample: { size: take } }]).toArray() };
   }

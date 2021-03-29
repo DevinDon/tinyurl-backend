@@ -1,35 +1,77 @@
-import { GET, HTTP404Exception, Inject, PathVariable, POST, RedirectResponse, RequestBody, View } from '@rester/core';
-import { LinkController } from './link.controller';
+import { BaseView, cleanify, DELETE, ExistResponse, GET, Handler, InjectedType, Injector, PathVariable, POST, PUT, RequestBody, requiredAtLeastOneParam, requiredParams, View } from '@rester/core';
+import { getEntity } from '@rester/orm';
+import { UserAuthHandler } from '../common/handlers';
+import { SnowFlake } from '../common/utils';
+import { LinkCollection, LinkEntity } from './link.entity';
+import { LinkID, LinkInsertParams, LinkUpdateParams } from './link.model';
+
+// create, remove, modify, take, search
+// one, more
 
 @View('link')
-export class LinkView {
+export class LinkView extends BaseView {
 
-  @Inject()
-  private controller!: LinkController;
+  private entity: LinkEntity;
+  private collection: LinkCollection;
+  private snowflake: SnowFlake;
+
+  async init() {
+    this.entity = getEntity(LinkEntity);
+    this.collection = this.entity.collection;
+    this.snowflake = Injector.create({ target: SnowFlake, type: InjectedType.ANY }).instance;
+  }
 
   @POST()
-  async transform(
-    @RequestBody() { url }: { url: string },
+  async create(
+    @RequestBody() { url }: LinkInsertParams,
   ) {
-    const isTinyurl = await this.controller.isTinyurl(url);
-    const result = await (
-      isTinyurl
-        ? this.controller.access(isTinyurl)
-        : this.controller.transform(url)
-    );
-    if (!result) {
-      throw new HTTP404Exception(`TinyURL ${url} cannot be restore.`);
+    requiredParams(url);
+    const isTinyURL = await this.entity.isTinyurl(url);
+    if (isTinyURL) {
+      return new ExistResponse({
+        data: await this.entity.access(isTinyURL),
+        message: 'TinyURL not found.',
+      });
     }
-    return result;
+    return new ExistResponse({
+      statusCode: 201,
+      data: await this.entity.insertOne({
+        id: this.snowflake.nextID().toString(36),
+        origin: url,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }),
+      message: 'Link created failed.',
+    });
+  }
+
+  @DELETE(':id')
+  @Handler(UserAuthHandler)
+  async remove(@PathVariable('id') id: LinkID) {
+    return this.entity.deleteOne(id);
+  }
+
+  @PUT(':id')
+  @Handler(UserAuthHandler)
+  async modify(
+    @PathVariable('id') id: LinkID,
+    @RequestBody() { origin }: LinkUpdateParams,
+  ) {
+    requiredAtLeastOneParam(origin);
+    return new ExistResponse({
+      data: await this.entity.updateOne(id, cleanify({ origin, updateAt: new Date() })),
+      message: 'Link not found.',
+    });
   }
 
   @GET(':id')
-  async access(@PathVariable('id') id: string) {
-    const link = await this.controller.access(id);
-    if (!link) {
-      throw new HTTP404Exception();
-    }
-    return new RedirectResponse({ url: link.origin, temporarily: true });
+  async take(
+    @PathVariable('id') id: LinkID,
+  ) {
+    return new ExistResponse({
+      data: await this.entity.findOne(id),
+      message: 'Link not found.',
+    });
   }
 
 }
