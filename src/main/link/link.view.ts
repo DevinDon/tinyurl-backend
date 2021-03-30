@@ -69,7 +69,7 @@ export class LinkView extends BaseView {
     @PathVariable('id') id: LinkID,
   ) {
     return new ExistResponse({
-      data: await this.entity.findOne(id),
+      data: await this.entity.access(id),
       message: 'Link not found.',
     });
   }

@@ -28,8 +28,7 @@ export class LinkEntity extends MongoEntity<Link> implements Link {
   }
 
   async access(urlID: string) {
-    const link = await this.collection.findOne({ id: urlID });
-    return link;
+    return this.collection.findOne({ id: urlID });
   }
 
   async getRandomList({ take }: Pick<PaginationParam, 'take'>) {
