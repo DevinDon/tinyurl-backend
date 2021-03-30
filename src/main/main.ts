@@ -1,11 +1,11 @@
-import { DEFAULT_HANDLERS, Rester } from '@rester/core';
+import { CORSHandler, DEFAULT_HANDLERS, Rester } from '@rester/core';
 import { AccessModule } from './access';
 import { AccessHandler } from './common/handlers';
 import { HostModule } from './host';
 import { LinkModule } from './link';
 
 const rester = new Rester({
-  handlers: [AccessHandler, ...DEFAULT_HANDLERS],
+  handlers: [AccessHandler, ...DEFAULT_HANDLERS, CORSHandler],
   modules: [AccessModule, HostModule, LinkModule],
 });
 
