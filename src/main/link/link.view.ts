@@ -1,4 +1,4 @@
-import { BaseView, cleanify, DELETE, ExistResponse, GET, Handler, InjectedType, Injector, PathVariable, POST, PUT, RequestBody, requiredAtLeastOneParam, requiredParams, View } from '@rester/core';
+import { BaseView, cleanify, DELETE, ExistResponse, GET, Handler, HTTP404Exception, InjectedType, Injector, PathVariable, POST, PUT, RedirectResponse, RequestBody, requiredAtLeastOneParam, requiredParams, View } from '@rester/core';
 import { getEntity } from '@rester/orm';
 import { UserAuthHandler } from '../common/handlers';
 import { SnowFlake } from '../common/utils';
@@ -68,10 +68,11 @@ export class LinkView extends BaseView {
   async take(
     @PathVariable('id') id: LinkID,
   ) {
-    return new ExistResponse({
-      data: await this.entity.access(id),
-      message: 'Link not found.',
-    });
+    const link = await this.entity.access(id);
+    if (!link) {
+      throw new HTTP404Exception(`Link '${id}' not found.`);
+    }
+    return new RedirectResponse({ url: link.origin, temporarily: true });
   }
 
 }
