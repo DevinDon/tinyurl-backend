@@ -46,7 +46,7 @@ export class HostView extends BaseView {
     @PathVariable('id') id: HostID,
     @RequestBody() { domain, expiredAt }: HostUpdateParams,
   ) {
-    requiredAtLeastOneParam(domain, expiredAt);
+    requiredAtLeastOneParam({ domain, expiredAt });
     return new ExistResponse({
       data: await this.entity.updateOne(id, cleanify({ domain, expiredAt, updateAt: new Date() })),
       message: 'Host not found.',
